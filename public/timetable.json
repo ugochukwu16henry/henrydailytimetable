@@ -1,0 +1,41 @@
+{
+  "schedule": {
+    "Monday": {
+      "03:00": { "activity": "Scriptural Study", "category": "Spiritual" },
+      "05:30": { "activity": "Wash Plates", "category": "Family" },
+      "07:00": { "activity": "School Runs", "category": "Family" },
+      "08:30": { "activity": "BYU-I Course", "category": "Academic" },
+      "10:00": { "activity": "Project: Riseflowhub", "category": "Project" },
+      "11:30": { "activity": "Internship Work", "category": "Internship" },
+      "12:30": { "activity": "Lunch Break", "category": "Family" },
+      "13:30": { "activity": "Skill: Video Editing", "category": "Skill Development" },
+      "14:30": { "activity": "School Runs", "category": "Family" },
+      "15:30": { "activity": "Research/Content", "category": "Skill Development" },
+      "16:30": { "activity": "Study: Prophets", "category": "Spiritual" },
+      "17:30": { "activity": "Time with Children", "category": "Family" },
+      "18:15": { "activity": "Internet/World News", "category": "Skill Development" },
+      "19:00": { "activity": "Time with Wife", "category": "Family" },
+      "20:00": { "activity": "Dinner", "category": "Family" },
+      "21:00": { "activity": "Family Home Eve.", "category": "Family" }
+    },
+    "Tuesday": {
+      "03:00": { "activity": "Scriptural Study", "category": "Spiritual" },
+      "05:30": { "activity": "Wash Plates", "category": "Family" },
+      "07:00": { "activity": "School Runs", "category": "Family" },
+      "08:30": { "activity": "BYU-I Course", "category": "Academic" },
+      "10:00": { "activity": "Project: MummyJ2", "category": "Project" },
+      "11:30": { "activity": "Free Time", "category": "Free Time" },
+      "12:30": { "activity": "Lunch Break", "category": "Family" },
+      "13:30": { "activity": "Skill: Video Editing", "category": "Skill Development" },
+      "14:30": { "activity": "School Runs", "category": "Family" },
+      "15:30": { "activity": "Research/Content", "category": "Skill Development" },
+      "16:30": { "activity": "Study: Prophets", "category": "Spiritual" },
+      "17:30": { "activity": "Time with Children", "category": "Family" },
+      "18:15": { "activity": "Free Time", "category": "Free Time" },
+      "19:00": { "activity": "Time with Wife", "category": "Family" },
+      "20:00": { "activity": "Dinner", "category": "Family" },
+      "21:00": { "activity": "Free Time", "category": "Free Time" }
+    }
+    // ...repeat for other days
+  }
+}

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Henry's Dynamic Timetable</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <h1>Henry's Dynamic Timetable</h1>
+    <nav>
+      <button id="dailyViewBtn">Daily</button>
+      <button id="weeklyViewBtn" class="active">Weekly</button>
+      <button id="monthlyViewBtn">Monthly</button>
+      <button id="toggleThemeBtn">🌙</button>
+    </nav>
+  </header>
+  <main>
+    <section id="timetable-section">
+      <div id="timetable-controls">
+        <label for="day-select">Select Day:</label>
+        <select id="day-select"></select>
+      </div>
+      <div id="timetable-container"></div>
+    </section>
+    <section id="edit-section" style="display:none;">
+      <h2>Edit Timetable</h2>
+      <form id="edit-form">
+        <label>Day: <select id="edit-day"></select></label>
+        <label>Time: <input type="time" id="edit-time" required></label>
+        <label>Activity: <input type="text" id="edit-activity" required></label>
+        <label>Category: <select id="edit-category">
+          <option>Spiritual</option>
+          <option>Academic</option>
+          <option>Project</option>
+          <option>Family</option>
+          <option>Internship</option>
+          <option>Skill Development</option>
+          <option>Free Time</option>
+        </select></label>
+        <button type="submit">Save</button>
+        <button type="button" id="cancel-edit">Cancel</button>
+      </form>
+    </section>
+    <section id="export-section">
+      <button id="export-pdf">Export PDF</button>
+      <button id="export-word">Export Word</button>
+    </section>
+  </main>
+  <footer>
+    <p>&copy; 2026 Henry's Timetable</p>
+  </footer>
+  <script src="app.js"></script>
+</body>
+</html>
