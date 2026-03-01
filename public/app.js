@@ -356,5 +356,25 @@ if (exportWordBtn) {
   });
 }
 
+const exportDocxBtn = document.getElementById('export-docx');
+if (exportDocxBtn) {
+  exportDocxBtn.addEventListener('click', () => {
+    fetch('/api/timetable.docx')
+      .then(res => {
+        if (!res.ok) throw new Error('Server not available');
+        return res.blob();
+      })
+      .then(blob => {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'henry-1year-timetable.docx';
+        a.click();
+        URL.revokeObjectURL(url);
+      })
+      .catch(() => alert('Export .docx requires the server. Run: npm start'));
+  });
+}
+
 // Initial load
 fetchTimetable();

@@ -3,11 +3,13 @@
   "meta": {
     "projects": ["RiseFlowHub", "MummyJ2Treats", "Global Counseling App"],
     "academicNote": "First 7 weeks: .NET Course + Personal Wellness. Then 7-week terms with 1-week break until graduation.",
+    "internshipNote": "Internship: 2 sessions per week (1–2 hours each), first 3 months only.",
     "specialEvents": {
       "Pathway Connect": "Thursday 8:00 PM – 9:00 PM",
       "Family Home Evening": "Monday 8:30 PM – 9:30 PM",
       "Church": "Sunday 8:00 AM – 10:00 AM",
-      "Home Worship": "Sunday (1 hour after church)"
+      "Home Worship": "Sunday (1 hour after church)",
+      "Church building cleaning": "Last Saturday of each month"
     }
   },
   "schedule": {
