@@ -1,3 +1,12 @@
+// New selectors for week/month navigation
+let weekSelect;
+let monthSelect;
+
+let timetableData = [];
+let currentView = 'weekly';
+let currentDay = 'Monday';
+let currentWeek = 1;
+let currentMonth = 1;
 // Dynamic Timetable Logic
 const timetableContainer = document.getElementById('timetable-container');
 const daySelect = document.getElementById('day-select');
@@ -24,12 +33,31 @@ function fetchTimetable() {
   fetch('timetable.json')
     .then(res => res.json())
     .then(data => {
-      timetableData = data.schedule;
+      timetableData = data.weeks;
       populateDaySelect();
       renderTimetable();
     });
 }
 
+function renderWeekSelector() {
+  const weekControls = document.getElementById('week-controls');
+  weekControls.innerHTML = '';
+  weekSelect = document.createElement('select');
+  weekSelect.id = 'week-select';
+  for (let i = 1; i <= timetableData.length; i++) {
+    const opt = document.createElement('option');
+    opt.value = i;
+    opt.textContent = `Week ${i}`;
+    weekSelect.appendChild(opt);
+  }
+  weekSelect.value = currentWeek;
+  weekSelect.addEventListener('change', e => {
+    currentWeek = parseInt(e.target.value);
+    populateDaySelect();
+    renderTimetable();
+  });
+  weekControls.appendChild(weekSelect);
+}
 function populateDaySelect() {
   daySelect.innerHTML = '';
   Object.keys(timetableData).forEach(day => {
