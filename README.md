@@ -14,35 +14,39 @@ A modern, responsive timetable website using only a JSON file as the data source
 ## Project Structure
 
 ```
-public/
-  index.html
-  styles.css
-  app.js
-  timetable.json
-src/
-server.js
-README.md
+henrydailytimetable/
+  public/
+    index.html
+    styles.css
+    app.js
+    timetable.json
+  server.js
+  package.json
+  README.md
 ```
 
 ## How to Run Locally
 
-1. Install [Node.js](https://nodejs.org/)
+1. Install [Node.js](https://nodejs.org/).
 2. Install dependencies:
    ```bash
-   npm install express
+   npm install
    ```
 3. Start the server:
    ```bash
-   node server.js
+   npm start
    ```
-4. Open your browser at [http://localhost:3000](http://localhost:3000)
+   Or: `node server.js`. The server runs on port 3000 by default (use `PORT=4000 npm start` to override).
+4. Open your browser at [http://localhost:3000](http://localhost:3000).
+
+Without the server, you can open `public/index.html` or host the `public/` folder statically; the app will load `timetable.json` directly, but **edit and save** will not persist to the file.
 
 ## How to Deploy
 
-- **Static only (no edit feature):**
-  - Upload the `public/` folder to Netlify or Vercel.
-- **With backend (edit feature):**
-  - Deploy `server.js` and `public/` to Vercel, Render, or Heroku.
+- **Static only (view + export, no persistent edit):**
+  - Upload the `public/` folder to Netlify or Vercel. The site will load the timetable from `timetable.json`.
+- **With backend (edit and save to JSON):**
+  - Deploy the full project (including `server.js`) to Render, Railway, Heroku, or a VPS. Set the `PORT` environment variable if required.
 
 ## Customizing Your Timetable
 
