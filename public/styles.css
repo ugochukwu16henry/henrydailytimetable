@@ -104,7 +104,9 @@ table.timetable th {
 table.timetable td.activity {
   font-weight: 500;
   border-left: 4px solid var(--accent);
+  cursor: pointer;
 }
+.activity-cell .activity { cursor: pointer; }
 table.timetable td.free {
   background: #eaf6ff;
   color: #888;
@@ -141,6 +143,49 @@ table.timetable td.current-time {
 body.dark table.timetable td.current-time {
   outline-color: var(--accent);
 }
+
+/* Task status: Done / Not done / Postponed */
+.task-status {
+  display: inline-block;
+  margin-top: 0.25rem;
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+}
+.task-status:hover {
+  filter: brightness(0.95);
+}
+.task-status.status-done {
+  background: #27ae60;
+  color: #fff;
+}
+.task-status.status-not-done {
+  background: var(--border);
+  color: var(--text);
+}
+.task-status.status-postponed {
+  background: #f39c12;
+  color: #fff;
+}
+.activity-cell {
+  vertical-align: top;
+}
+.activity-cell .activity {
+  display: block;
+  border-left: 4px solid var(--accent);
+  font-weight: 500;
+}
+.activity-cell .activity.free { background: #eaf6ff; color: #888; }
+.activity-cell .activity.spiritual { background: #e0e7ff; color: #2a7ae2; }
+.activity-cell .activity.academic { background: #fffbe6; color: #e67e22; }
+.activity-cell .activity.project { background: #e6fff7; color: #27ae60; }
+.activity-cell .activity.family { background: #ffe6f2; color: #c0392b; }
+.activity-cell .activity.internship { background: #f0f0f0; color: #7f8c8d; }
+.activity-cell .activity.skill { background: #f6e6ff; color: #8e44ad; }
+
 .early-morning-note {
   background: var(--card);
   border-radius: 10px;

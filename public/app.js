@@ -153,6 +153,51 @@ function getEntry(day, time) {
   return entry ? { activity: entry.activity, category: entry.category } : null;
 }
 
+// --- Task completion (done / not done / postponed) per date ---
+const COMPLETION_KEY = 'henry-timetable-completion';
+
+function getViewingDate(dayName) {
+  const today = new Date();
+  const dayIndex = DAYS_ORDER.indexOf(dayName);
+  const currentDayIndex = today.getDay();
+  const monOffset = currentDayIndex === 0 ? -6 : 1 - currentDayIndex;
+  const thisMonday = new Date(today);
+  thisMonday.setDate(today.getDate() + monOffset);
+  const targetDate = new Date(thisMonday);
+  targetDate.setDate(thisMonday.getDate() + dayIndex);
+  const y = targetDate.getFullYear(), m = String(targetDate.getMonth() + 1).padStart(2, '0'), d = String(targetDate.getDate()).padStart(2, '0');
+  return `${y}-${m}-${d}`;
+}
+
+function getCompletionStore() {
+  try {
+    const raw = localStorage.getItem(COMPLETION_KEY);
+    return raw ? JSON.parse(raw) : {};
+  } catch (_) { return {}; }
+}
+
+function setCompletion(dateStr, time, status) {
+  const store = getCompletionStore();
+  if (!store[dateStr]) store[dateStr] = {};
+  store[dateStr][time] = status;
+  localStorage.setItem(COMPLETION_KEY, JSON.stringify(store));
+}
+
+function getCompletion(dateStr, time) {
+  const store = getCompletionStore();
+  return (store[dateStr] && store[dateStr][time]) || 'not-done';
+}
+
+function cycleStatus(current) {
+  if (current === 'not-done') return 'done';
+  if (current === 'done') return 'postponed';
+  return 'not-done';
+}
+
+function statusLabel(s) {
+  return { 'done': '✓ Done', 'not-done': '○ Not done', 'postponed': '⊙ Postponed' }[s] || '○ Not done';
+}
+
 function isCurrentCell(day, time) {
   const today = getTodayDayName();
   const current = getCurrentTimeBlock();
@@ -161,13 +206,16 @@ function isCurrentCell(day, time) {
 
 function renderDailyTable(day) {
   const times = getTimeBlocks();
-  let html = `<table class="timetable"><thead><tr><th>Time</th><th>${day}</th></tr></thead><tbody>`;
+  const dateStr = getViewingDate(day);
+  let html = `<table class="timetable"><thead><tr><th>Time</th><th>${day}</th><th>Status</th></tr></thead><tbody>`;
   times.forEach(time => {
     const entry = getEntry(day, time);
     const activity = entry ? entry.activity : 'Free Time';
     const category = entry ? (categories[entry.category] || 'free') : 'free';
     const currentClass = isCurrentCell(day, time) ? ' current-time' : '';
-    html += `<tr><td>${time}</td><td class="activity ${category}${currentClass}" data-day="${day}" data-time="${time}">${activity}</td></tr>`;
+    const status = getCompletion(dateStr, time);
+    const statusClass = status === 'done' ? ' status-done' : status === 'postponed' ? ' status-postponed' : ' status-not-done';
+    html += `<tr><td>${time}</td><td class="activity ${category}${currentClass}" data-day="${day}" data-time="${time}">${activity}</td><td class="task-status ${statusClass}" data-day="${day}" data-time="${time}" data-date="${dateStr}" title="Click: ${statusLabel(status)}">${statusLabel(status)}</td></tr>`;
   });
   html += '</tbody></table>';
   return html;
@@ -186,7 +234,10 @@ function renderWeeklyTable() {
       const activity = entry ? entry.activity : 'Free Time';
       const category = entry ? (categories[entry.category] || 'free') : 'free';
       const currentClass = isCurrentCell(day, time) ? ' current-time' : '';
-      html += `<td class="activity ${category}${currentClass}" data-day="${day}" data-time="${time}">${activity}</td>`;
+      const dateStr = getViewingDate(day);
+      const status = getCompletion(dateStr, time);
+      const statusClass = status === 'done' ? ' status-done' : status === 'postponed' ? ' status-postponed' : ' status-not-done';
+      html += `<td class="activity-cell"><span class="activity ${category}${currentClass}" data-day="${day}" data-time="${time}">${activity}</span><span class="task-status ${statusClass}" data-day="${day}" data-time="${time}" data-date="${dateStr}" title="Click: ${statusLabel(status)}">${statusLabel(status)}</span></td>`;
     });
     html += '</tr>';
   });
@@ -233,17 +284,26 @@ function renderMonthlyTable() {
 }
 
 function attachEditCellHandlers() {
-  timetableContainer.querySelectorAll('td.activity[data-day][data-time]').forEach(td => {
-    td.addEventListener('click', () => {
+  timetableContainer.querySelectorAll('td .activity[data-day][data-time], td.activity[data-day][data-time]').forEach(el => {
+    el.addEventListener('click', (e) => {
+      if (e.target.classList.contains('task-status')) return;
       if (!window.showEditSection) return;
-      const day = td.getAttribute('data-day');
-      const time = td.getAttribute('data-time');
+      const day = el.getAttribute('data-day');
+      const time = el.getAttribute('data-time');
       const entry = getEntry(day, time);
-      document.getElementById('edit-day').value = day;
-      document.getElementById('edit-time').value = time;
-      document.getElementById('edit-activity').value = entry ? entry.activity : '';
-      document.getElementById('edit-category').value = entry ? entry.category : 'Free Time';
-      window.showEditSection();
+      window.showEditSection(day, time, entry ? entry.activity : '', entry ? entry.category : 'Free Time');
+    });
+  });
+  timetableContainer.querySelectorAll('.task-status').forEach(el => {
+    el.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const dateStr = el.getAttribute('data-date');
+      const time = el.getAttribute('data-time');
+      const next = cycleStatus(getCompletion(dateStr, time));
+      setCompletion(dateStr, time, next);
+      el.textContent = statusLabel(next);
+      el.className = 'task-status ' + (next === 'done' ? ' status-done' : next === 'postponed' ? ' status-postponed' : ' status-not-done');
+      el.setAttribute('title', 'Click: ' + statusLabel(next));
     });
   });
   document.querySelectorAll('.view-day-btn').forEach(btn => {
@@ -263,16 +323,20 @@ const editForm = document.getElementById('edit-form');
 const cancelEditBtn = document.getElementById('cancel-edit');
 const editTimetableBtn = document.getElementById('edit-timetable-btn');
 
-window.showEditSection = function() {
+window.showEditSection = function(day, time, activity, category) {
   editSection.style.display = 'block';
   const editDaySelect = document.getElementById('edit-day');
   editDaySelect.innerHTML = '';
-  DAYS_ORDER.filter(d => timetableData[d]).forEach(day => {
+  DAYS_ORDER.filter(d => timetableData[d]).forEach(d => {
     const opt = document.createElement('option');
-    opt.value = day;
-    opt.textContent = day;
+    opt.value = d;
+    opt.textContent = d;
     editDaySelect.appendChild(opt);
   });
+  if (day) editDaySelect.value = day;
+  if (time) document.getElementById('edit-time').value = time;
+  if (activity !== undefined) document.getElementById('edit-activity').value = activity;
+  if (category) document.getElementById('edit-category').value = category;
 };
 
 function hideEditSection() {
